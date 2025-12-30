@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Allowance Tracker</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#0b1020" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__title" id="topTitle">Calendar</div>
+    <button class="iconbtn" id="todayBtn" title="Jump to today">Today</button>
+  </header>
+
+  <main class="main" id="main">
+    <!-- Calendar View -->
+    <section class="view view--active" id="viewCalendar">
+      <div class="monthbar">
+        <button class="iconbtn" id="prevMonth">‹</button>
+        <div class="monthbar__label" id="monthLabel">—</div>
+        <button class="iconbtn" id="nextMonth">›</button>
+      </div>
+
+      <div class="dow">
+        <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+      </div>
+
+      <div class="calendar" id="calendarGrid"></div>
+
+      <div class="hint">Tap a day to see / edit claims. Long-press a day to tag it (Weekday/Weekend/PH) for your own reference.</div>
+    </section>
+
+    <!-- Add View -->
+    <section class="view" id="viewAdd">
+      <div class="card">
+        <h2>Add claim</h2>
+
+        <label class="label">Date</label>
+        <input class="input" type="date" id="addDate" />
+
+        <label class="label">Category</label>
+        <div class="catgrid" id="catButtons"></div>
+
+        <label class="label">Quantity</label>
+        <div class="row">
+          <button class="pill" id="qtyMinus">−</button>
+          <input class="input input--center" type="number" min="1" step="1" id="addQty" value="1" />
+          <button class="pill" id="qtyPlus">+</button>
+        </div>
+
+        <label class="label">Note (optional)</label>
+        <input class="input" type="text" id="addNote" placeholder="e.g. Ward X, shift swap…" />
+
+        <button class="primary" id="saveClaim">Save</button>
+        <div class="muted" id="saveHint"></div>
+      </div>
+    </section>
+
+    <!-- Stats View -->
+    <section class="view" id="viewStats">
+      <div class="card">
+        <div class="row row--space">
+          <h2 id="statsTitle">Stats</h2>
+          <select class="input input--select" id="statsMonth"></select>
+        </div>
+
+        <div class="statline">
+          <div class="statline__label">Total claimed</div>
+          <div class="statline__value" id="totalMonth">$0</div>
+        </div>
+
+        <h3>By category (amount)</h3>
+        <div class="barchart" id="barAmount"></div>
+
+        <h3>By category (count)</h3>
+        <div class="barchart" id="barCount"></div>
+
+        <div class="table" id="statsTable"></div>
+      </div>
+    </section>
+
+    <!-- Settings View -->
+    <section class="view" id="viewSettings">
+      <div class="card">
+        <h2>Settings</h2>
+
+        <div class="section">
+          <h3>Export / Import (privacy-friendly)</h3>
+          <p class="muted">Export makes a file you can keep or send. Import restores on the same phone or a new phone.</p>
+          <div class="row">
+            <button class="pill" id="exportBtn">Export</button>
+            <label class="pill pill--file">
+              Import
+              <input type="file" id="importFile" accept="application/json" />
+            </label>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Danger zone</h3>
+          <p class="muted">This wipes all claims and day tags on this device.</p>
+          <button class="danger" id="wipeBtn">Wipe all data</button>
+        </div>
+
+        <div class="muted">Offline storage is on your phone (IndexedDB). Data stays after closing the app.</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Bottom Tab Bar -->
+  <nav class="tabs">
+    <button class="tab tab--active" data-view="Calendar">Calendar</button>
+    <button class="tab" data-view="Add">Add</button>
+    <button class="tab" data-view="Stats">Stats</button>
+    <button class="tab" data-view="Settings">Settings</button>
+  </nav>
+
+  <!-- Day sheet modal -->
+  <div class="sheetback" id="sheetBack">
+    <div class="sheet" role="dialog" aria-modal="true">
+      <div class="sheet__grab"></div>
+      <div class="sheet__head">
+        <div>
+          <div class="sheet__title" id="sheetTitle">—</div>
+          <div class="muted" id="sheetTag">Tag: —</div>
+        </div>
+        <div class="row">
+          <button class="pill" id="tagBtn">Tag day</button>
+          <button class="pill" id="closeSheet">Close</button>
+        </div>
+      </div>
+
+      <div class="sheet__body">
+        <div class="row row--space">
+          <h3>Claims</h3>
+          <button class="pill" id="addFromSheet">+ Add</button>
+        </div>
+        <div id="claimsList" class="claims"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="db.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
